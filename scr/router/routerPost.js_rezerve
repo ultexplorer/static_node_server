@@ -1,0 +1,31 @@
+'use strict'
+
+const routerPost = async client => {
+    let { req, res } = client;
+    if(req.url === '/form'){
+        let buffer = [];
+        const post = (req, res,  callback) => {
+            req.on('data', chunk => {
+                buffer.push(chunk);
+            });
+            req.on('end', () => {
+                //console.log(buffer.join());
+                const result = buffer.join();
+                if(callback instanceof Function){
+                    callback(null, res,  result);
+                }
+
+                //res.end('ok')
+            })
+        }
+        post(req, res, (err, response,  data) => {
+            if(err) throw err;
+            else {
+                console.log(data);
+                response.end('ok')
+            }
+        });
+    }
+}
+
+export { routerPost };
